@@ -25,9 +25,9 @@ public class DataDriven {
             if (workbook.getSheetName(i).equalsIgnoreCase("test")) {
                 XSSFSheet sheet = workbook.getSheetAt(i);
 
-                Iterator <Row> rows = sheet.iterator(); //sheet is collection of rows
+                Iterator<Row> rows = sheet.iterator(); //sheet is collection of rows
                 Row firsRow = rows.next();
-                Iterator <Cell > ce =  firsRow.cellIterator(); //row is collection of cells
+                Iterator<Cell> ce = firsRow.cellIterator(); //row is collection of cells
                 int k = 0;
                 int colum = 0;
                 while (ce.hasNext()) {
@@ -40,6 +40,18 @@ public class DataDriven {
                 System.out.println(colum);
 
                 //once colum is identified then scan entire testcase colum to identify purchase testcase
+
+                while (rows.hasNext()) {
+                    Row r = rows.next();
+                    if (r.getCell(colum).getStringCellValue().equalsIgnoreCase("Purchase")) {
+
+                        //after you grab purchase testcase row = pull all the data of that row and feed it into test
+                        Iterator <Cell> cv = r.cellIterator();
+                        while (cv.hasNext()) {
+                            System.out.println(cv.next().getStringCellValue());
+                        }
+                    }
+                }
             }
         }
     }
