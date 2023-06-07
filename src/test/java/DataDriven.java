@@ -1,11 +1,13 @@
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class DataDriven {
@@ -14,9 +16,10 @@ public class DataDriven {
     //once colum is identified then scan entire testcase colum to identify purchase testcase
     //after you grab purchase testcase row = pull all the data of that row and feed it into test
 
-    public static void main(String[] args) throws IOException {
-
+    public ArrayList<String> getData(String testcaseName) throws IOException {
         //fileInputStream argument
+        ArrayList<String> a = new ArrayList<String>();
+
         FileInputStream fis = new FileInputStream("/Users/vjaceslavsjermakovs/Desktop/Files/ExcelDrivenTable.xlsx");
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
 
@@ -43,16 +46,26 @@ public class DataDriven {
 
                 while (rows.hasNext()) {
                     Row r = rows.next();
-                    if (r.getCell(colum).getStringCellValue().equalsIgnoreCase("Purchase")) {
+                    if (r.getCell(colum).getStringCellValue().equalsIgnoreCase(testcaseName)) {
 
                         //after you grab purchase testcase row = pull all the data of that row and feed it into test
                         Iterator <Cell> cv = r.cellIterator();
                         while (cv.hasNext()) {
-                            System.out.println(cv.next().getStringCellValue());
+                            Cell c = cv.next();
+                            if (c.getCellType() == CellType.STRING) {
+                                a.add(c.getStringCellValue());
+                            } else {
+                                a.add(NumberToTextConverter.toText(c.getNumericCellValue()));
+                            }
                         }
                     }
                 }
             }
         }
+        return a;
+    }
+
+    public static void main(String[] args) throws IOException {
+
     }
 }
